@@ -1,5 +1,6 @@
 from data_loader import DataLoader
 from prelim_analyser import PrelimAnalyser
+from feature_selector import FeatureSelector
 import pandas as pd
 import os
 
@@ -16,12 +17,24 @@ def main(verbose=True) -> None:
         pd.set_option('display.max_columns', 100)
         print(loader.data.head())
         print("Number of rows:", len(loader.data))
+        print(loader.data.describe())
 
     # Conduct preliminary analysis
-    analyser = PrelimAnalyser(data=loader.data)
+    analyser = PrelimAnalyser(data=X_train)
     analyser.generate_statistics()
     analyser.print_high_correlation_pairs()
-    # analyser.plot_correlation_matrix()
+    analyser.plot_correlation_matrix()
+
+    # Feature selection
+    selector = FeatureSelector(X_train, y_train)
+    selector.model_based_selection(fresh_analysis=False)
+    selector.univariate_selection()
+
+    # count numeric and non-numeric columns
+    numeric_cols = X_train.select_dtypes(include=['number']).columns
+    non_numeric_cols = X_train.select_dtypes(exclude=['number']).columns
+    print(f"Numeric columns: {len(numeric_cols)}")
+    print(f"Non-numeric columns: {len(non_numeric_cols)}")
 
 if __name__ == "__main__":
     main()

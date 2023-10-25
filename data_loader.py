@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from typing import Tuple, List
 import glob
 import os
@@ -24,11 +25,12 @@ class DataLoader:
 
     def cleanse_data(self) -> None:
         initial_size = len(self.data)
+        self.data.replace([np.inf, -np.inf], np.nan, inplace=True)
         # Removing rows with any missing values
         self.data.dropna(inplace=True)
 
         # Filter numeric columns
-        numeric_data = self.data.select_dtypes(include=[np.number])
+        numeric_data = self.data.select_dtypes(include=['number'])
         # Capture columns with constant values (zero variance)
         constant_columns = numeric_data.columns[numeric_data.std() == 0]
         # Drop these columns from the original dataset
@@ -52,12 +54,34 @@ class DataLoader:
 
         X = self.data[features]
         y = self.data['binary_label']
+        # Identify numeric columns
+        numeric_cols = X.select_dtypes(include=['number']).columns
 
         if val_size > 0:
             X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=test_size + val_size, random_state=42)
             X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=val_size/(test_size + val_size), random_state=42)
-            return X_train, X_val, X_test, y_train, y_val, y_test
+
+            # Identify numeric columns
+            numeric_cols = X_train.select_dtypes(include='number').columns
+
+            # Scale the numeric columns
+            scaler = StandardScaler()
+            X_train[numeric_cols] = scaler.fit_transform(X_train[numeric_cols])
+            X_val[numeric_cols] = scaler.transform(X_val[numeric_cols])
+            X_test[numeric_cols] = scaler.transform(X_test[numeric_cols])
         else:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-            # Returning None for X_val and y_val when val_size is 0
-            return X_train, None, X_test, y_train, None, y_test
+
+            # Identify numeric columns
+            numeric_cols = X_train.select_dtypes(include='number').columns
+
+            # Scale the numeric columns
+            scaler = StandardScaler()
+            X_train[numeric_cols] = scaler.fit_transform(X_train[numeric_cols])
+            X_test[numeric_cols] = scaler.transform(X_test[numeric_cols])
+            X_val = None
+            y_val = None
+
+        self.scaledData = pd.concat([X_train, X_val, X_test], ignore_index=True)
+
+        return X_train, X_val, X_test, y_train, y_val, y_test

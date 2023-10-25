@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class PrelimAnalyser:
-    def __init__(self, data: pd.DataFrame):
+    def __init__(self, data: pd.DataFrame, show_plots: bool = False):
         self.data = data
+        self.show_plots = show_plots
 
     def generate_statistics(self) -> None:
         print(self.data.describe())
@@ -39,7 +40,9 @@ class PrelimAnalyser:
         correlation_matrix = self.get_numerical_data().corr()
         sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm')
         plt.title('Correlation Matrix')
-        plt.show()
+        plt.savefig('plots/correlation_matrix.png', bbox_inches='tight')
+        if self.show_plots:
+            plt.show()
     
     def get_numerical_data(self) -> pd.DataFrame:
         # Select only the numerical columns of the DataFrame

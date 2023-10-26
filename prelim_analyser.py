@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import shapiro
+from fitter import Fitter
+import os
 
 class PrelimAnalyser:
     def __init__(self, data: pd.DataFrame, show_plots: bool = False):
@@ -18,6 +20,36 @@ class PrelimAnalyser:
             plt.title(f'Distribution of {column}')
             plt.show()
             plt.clf()
+
+    def find_best_fit_distribution(self, fresh_analysis: bool = False) -> pd.DataFrame:
+        results_path = os.path.join('results', 'distribution_table.txt')
+
+        if not fresh_analysis and os.path.exists(results_path):
+            distribution_table = pd.read_csv(results_path, sep='\t')
+            print(distribution_table)
+            return distribution_table
+
+        distribution_names = []
+        feature_names = []
+        for column in self.get_numerical_data().columns:
+            # Sample 10k data points to speed up the process
+            data = self.data[column].sample(n=10000, random_state=42)
+            f = Fitter(data, timeout=60, distributions='common')
+            f.fit()
+            best_fit_dict = f.get_best()
+            best_fit_name, best_fit_params = max(best_fit_dict.items(), key=lambda x: x[1])
+            print(f'Best fit for {column}: {best_fit_name}')
+            feature_names.append(column)
+            distribution_names.append(best_fit_name)
+
+        distribution_table = pd.DataFrame({
+            'Feature': feature_names,
+            'Distribution': distribution_names
+        })
+        distribution_table.to_csv(results_path, sep='\t', index=False)
+        print(distribution_table)
+
+        return distribution_table
 
     def test_normality(self) -> None:
         for column in self.get_numerical_data().columns:

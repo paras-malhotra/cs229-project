@@ -15,6 +15,7 @@ def main(verbose=True) -> None:
     X_train, X_val, X_test, y_train, y_val, y_test = loader.split_data(original_label_column='label', features=None, test_size=0.3, val_size=0.0)
     
     if verbose:
+        pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', 100)
         print(loader.data.head())
         print("Number of rows:", len(loader.data))
@@ -22,8 +23,9 @@ def main(verbose=True) -> None:
 
     # Conduct preliminary analysis
     analyser = PrelimAnalyser(data=X_train)
+    analyser.find_best_fit_distribution()
     analyser.generate_statistics()
-    analyser.test_normality()
+    # analyser.test_normality()
     analyser.print_high_correlation_pairs()
     analyser.plot_correlation_matrix()
 

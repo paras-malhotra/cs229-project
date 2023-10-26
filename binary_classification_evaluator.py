@@ -1,3 +1,4 @@
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.base import ClassifierMixin
 from typing import Protocol, Dict, Any
@@ -11,10 +12,12 @@ class PredictiveModel(Protocol):
         pass
 
 class BinaryClassificationEvaluator:
-    def __init__(self, models: Dict[str, PredictiveModel], X_test: pd.DataFrame, y_test: pd.Series, verbose: bool = True, show_plots: bool = False):
+    def __init__(self, models: Dict[str, PredictiveModel], X_test: pd.DataFrame, y_test: pd.Series, labels_test: pd.Series, scaler: StandardScaler, verbose: bool = True, show_plots: bool = False):
         self.models = models
         self.X_test = X_test
         self.y_test = y_test
+        self.labels_test = labels_test
+        self.scalar = scaler
         self.verbose = verbose
         self.show_plots = show_plots
 
@@ -37,3 +40,32 @@ class BinaryClassificationEvaluator:
             if self.show_plots:
                 plt.show()
             plt.clf()
+
+    def print_top_k_high_confidence_errors(self, k: int = 100) -> None:
+        for name, model in self.models.items():
+            if hasattr(model, 'predict_proba'):
+                probas = model.predict_proba(self.X_test)
+                y_pred = model.predict(self.X_test)
+                error_indices = np.where(y_pred != self.y_test)[0]
+                fp_error_indices = error_indices[probas[error_indices, 1].argsort()[-k:]]
+                fn_error_indices = error_indices[probas[error_indices, 0].argsort()[-k:]]
+
+                fp_df = pd.DataFrame(self.scalar.inverse_transform(self.X_test.iloc[fp_error_indices]), columns=self.X_test.columns)
+                fp_df['Predicted Label'] = 1
+                fp_df['Original Label'] = self.labels_test.iloc[fp_error_indices].values
+                fp_df['Probability'] = probas[fp_error_indices, 1]
+
+                fn_df = pd.DataFrame(self.scalar.inverse_transform(self.X_test.iloc[fn_error_indices]), columns=self.X_test.columns)
+                fn_df['Predicted Label'] = 0
+                fn_df['Original Label'] = self.labels_test.iloc[fn_error_indices].values
+                fn_df['Probability'] = probas[fn_error_indices, 0]
+
+                print(f'Top {k} high confidence false positives for {name}:')
+                print(fp_df)
+                fp_df.to_csv(f'results/top_{k}_fp_{name}.csv', index=False)
+
+                print(f'Top {k} high confidence false negatives for {name}:')
+                print(fn_df)
+                fn_df.to_csv(f'results/top_{k}_fn_{name}.csv', index=False)
+            else:
+                print(f'{name} does not support predict_proba()')

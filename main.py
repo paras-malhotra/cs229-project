@@ -12,7 +12,7 @@ def main(verbose=True) -> None:
     data_dir = os.path.join(current_dir, 'data')
     loader = DataLoader(directory=data_dir, verbose=verbose)
     loader.load_and_clean_data(fresh=False)
-    X_train, X_val, X_test, y_train, y_val, y_test = loader.split_data(original_label_column='label', features=None, test_size=0.3, val_size=0.0)
+    X_train, X_val, X_test, y_train, y_val, y_test, labels_train, labels_val, labels_test = loader.split_data(original_label_column='label', features=None, test_size=0.3, val_size=0.0)
     
     if verbose:
         pd.set_option('display.max_rows', None)
@@ -45,8 +45,9 @@ def main(verbose=True) -> None:
     models = classifier.train_models(retrain=False)
 
     # Evaluation
-    evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, verbose=verbose)
+    evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, labels_test=labels_test, scaler=loader.scaler, verbose=verbose)
     evaluator.evaluate_models()
+    evaluator.print_top_k_high_confidence_errors(k=100)
 
 if __name__ == "__main__":
     main()

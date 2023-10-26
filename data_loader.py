@@ -82,10 +82,10 @@ class DataLoader:
             numeric_cols = X_train.select_dtypes(include='number').columns
 
             # Scale the numeric columns
-            scaler = StandardScaler()
-            X_train[numeric_cols] = scaler.fit_transform(X_train[numeric_cols])
-            X_val[numeric_cols] = scaler.transform(X_val[numeric_cols])
-            X_test[numeric_cols] = scaler.transform(X_test[numeric_cols])
+            self.scaler = StandardScaler()
+            X_train[numeric_cols] = self.scaler.fit_transform(X_train[numeric_cols])
+            X_val[numeric_cols] = self.scaler.transform(X_val[numeric_cols])
+            X_test[numeric_cols] = self.scaler.transform(X_test[numeric_cols])
         else:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
 
@@ -93,12 +93,15 @@ class DataLoader:
             numeric_cols = X_train.select_dtypes(include='number').columns
 
             # Scale the numeric columns
-            scaler = StandardScaler()
-            X_train[numeric_cols] = scaler.fit_transform(X_train[numeric_cols])
-            X_test[numeric_cols] = scaler.transform(X_test[numeric_cols])
+            self.scaler = StandardScaler()
+            X_train[numeric_cols] = self.scaler.fit_transform(X_train[numeric_cols])
+            X_test[numeric_cols] = self.scaler.transform(X_test[numeric_cols])
             X_val = None
             y_val = None
 
-        self.scaledData = pd.concat([X_train, X_val, X_test], ignore_index=True)
+        labels_train = self.data.loc[X_train.index, original_label_column]
+        labels_val = None if val_size == 0 else self.data.loc[X_val.index, original_label_column]
+        labels_test = self.data.loc[X_test.index, original_label_column]
+        # self.scaledData = pd.concat([X_train, X_val, X_test], ignore_index=True)
 
-        return X_train, X_val, X_test, y_train, y_val, y_test
+        return X_train, X_val, X_test, y_train, y_val, y_test, labels_train, labels_val, labels_test

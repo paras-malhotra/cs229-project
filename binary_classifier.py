@@ -1,10 +1,11 @@
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from typing import Dict, Any
 import pandas as pd
 import os
 import joblib
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
 class BinaryClassifier:
     def __init__(self, X_train: pd.DataFrame, y_train: pd.Series, model_dir: str ='saved_models',  verbose: bool = True) -> None:
@@ -18,7 +19,8 @@ class BinaryClassifier:
             'GDA': QuadraticDiscriminantAnalysis(),
             'Regularized GDA': QuadraticDiscriminantAnalysis(reg_param=0.7),
             'Logistic Regression': LogisticRegression(random_state=42, solver='liblinear', penalty='l2', fit_intercept=True, max_iter=1000, verbose=1 if self.verbose else 0),
-            'Decision Tree': DecisionTreeClassifier(random_state=42, criterion='gini', splitter='best', max_depth=None, max_features=None)
+            'Decision Tree': DecisionTreeClassifier(random_state=42, criterion='gini', splitter='best', max_depth=None, max_features=None),
+            'Random Forest': RandomForestClassifier(random_state=42, criterion='gini', max_depth=None, max_features='sqrt', n_jobs=-1, verbose=3 if self.verbose else 0)
         }
         for name, model in models.items():
             file_path = os.path.join(self.model_dir, f'{name.replace(" ", "_").lower()}.joblib')

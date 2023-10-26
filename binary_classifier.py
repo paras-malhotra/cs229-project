@@ -16,6 +16,7 @@ class BinaryClassifier:
     def train_models(self, retrain: bool = False) -> Dict[str, Any]:
         models = {
             'GDA': QuadraticDiscriminantAnalysis(),
+            'Regularized GDA': QuadraticDiscriminantAnalysis(reg_param=0.7),
             'Logistic Regression': LogisticRegression(random_state=42, solver='liblinear', penalty='l2', fit_intercept=True, max_iter=1000, verbose=1 if self.verbose else 0),
             'Decision Tree': DecisionTreeClassifier(random_state=42, criterion='gini', splitter='best', max_depth=None, max_features=None)
         }

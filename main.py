@@ -23,6 +23,7 @@ def main(verbose=True) -> None:
     # Conduct preliminary analysis
     analyser = PrelimAnalyser(data=X_train)
     analyser.generate_statistics()
+    analyser.test_normality()
     analyser.print_high_correlation_pairs()
     analyser.plot_correlation_matrix()
 

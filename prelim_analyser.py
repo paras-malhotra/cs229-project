@@ -2,6 +2,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.stats import shapiro
 
 class PrelimAnalyser:
     def __init__(self, data: pd.DataFrame, show_plots: bool = False):
@@ -17,6 +18,11 @@ class PrelimAnalyser:
             plt.title(f'Distribution of {column}')
             plt.show()
             plt.clf()
+
+    def test_normality(self) -> None:
+        for column in self.get_numerical_data().columns:
+            stat, p_value = shapiro(self.data[column])
+            print(f'Shapiro-Wilk Test for {column}: Statistic={stat:.3f}, p-value={p_value:.3f}')
 
     def print_high_correlation_pairs(self, threshold: float = 0.4) -> None:
         correlation_matrix = self.get_numerical_data().corr()

@@ -1,0 +1,9 @@
+Classification Report for GDA:
+              precision    recall  f1-score   support
+
+           0       1.00      0.60      0.75    681272
+           1       0.38      1.00      0.55    167091
+
+    accuracy                           0.68    848363
+   macro avg       0.69      0.80      0.65    848363
+weighted avg       0.88      0.68      0.71    848363

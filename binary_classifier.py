@@ -4,6 +4,7 @@ from typing import Dict, Any
 import pandas as pd
 import os
 import joblib
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
 class BinaryClassifier:
     def __init__(self, X_train: pd.DataFrame, y_train: pd.Series, model_dir: str ='saved_models',  verbose: bool = True) -> None:
@@ -14,6 +15,7 @@ class BinaryClassifier:
 
     def train_models(self, retrain: bool = False) -> Dict[str, Any]:
         models = {
+            'GDA': QuadraticDiscriminantAnalysis(),
             'Logistic Regression': LogisticRegression(random_state=42, solver='liblinear', penalty='l2', fit_intercept=True, max_iter=1000, verbose=1 if self.verbose else 0),
             'Decision Tree': DecisionTreeClassifier(random_state=42, criterion='gini', splitter='best', max_depth=None, max_features=None)
         }

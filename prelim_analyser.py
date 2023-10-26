@@ -16,6 +16,7 @@ class PrelimAnalyser:
             sns.histplot(self.data[column], kde=True)
             plt.title(f'Distribution of {column}')
             plt.show()
+            plt.clf()
 
     def print_high_correlation_pairs(self, threshold: float = 0.4) -> None:
         correlation_matrix = self.get_numerical_data().corr()
@@ -43,6 +44,7 @@ class PrelimAnalyser:
         plt.savefig('plots/correlation_matrix.png', bbox_inches='tight')
         if self.show_plots:
             plt.show()
+        plt.clf()
     
     def get_numerical_data(self) -> pd.DataFrame:
         # Select only the numerical columns of the DataFrame

@@ -1,6 +1,8 @@
 from data_loader import DataLoader
 from prelim_analyser import PrelimAnalyser
 from feature_selector import FeatureSelector
+from binary_classifier import BinaryClassifier
+from binary_classification_evaluator import BinaryClassificationEvaluator
 import pandas as pd
 import os
 
@@ -35,6 +37,14 @@ def main(verbose=True) -> None:
     non_numeric_cols = X_train.select_dtypes(exclude=['number']).columns
     print(f"Numeric columns: {len(numeric_cols)}")
     print(f"Non-numeric columns: {len(non_numeric_cols)}")
+
+    # Binary classification
+    classifier = BinaryClassifier(X_train=X_train, y_train=y_train, verbose=verbose)
+    models = classifier.train_models(retrain=False)
+
+    # Evaluation
+    evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, verbose=verbose)
+    evaluator.evaluate_models()
 
 if __name__ == "__main__":
     main()

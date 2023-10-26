@@ -40,6 +40,7 @@ class FeatureSelector:
         plt.savefig('plots/feature_importances.png', bbox_inches='tight')
         if self.show_plots:
             plt.show()
+        plt.clf()
 
         # Generate a table of top features
         feature_importance_df = pd.DataFrame({

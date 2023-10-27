@@ -20,6 +20,7 @@ def main(verbose=True) -> None:
         print(loader.data.head())
         print("Number of rows:", len(loader.data))
         print(loader.data.describe())
+        print(loader.data['label'].value_counts())
 
     # Conduct preliminary analysis
     analyser = PrelimAnalyser(data=X_train)
@@ -47,6 +48,7 @@ def main(verbose=True) -> None:
     # Evaluation
     evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, labels_test=labels_test, scaler=loader.scaler, verbose=verbose)
     evaluator.evaluate_models()
+    evaluator.calculate_attack_identification_rate_by_label()
     evaluator.print_top_k_high_confidence_errors(k=100)
 
 if __name__ == "__main__":

@@ -41,6 +41,22 @@ class BinaryClassificationEvaluator:
                 plt.show()
             plt.clf()
 
+    def calculate_attack_identification_rate_by_label(self) -> pd.DataFrame:
+        unique_labels = self.labels_test.unique()
+        rates = []
+        for name, model in self.models.items():
+            for label in unique_labels:
+                if label == 'BENIGN':
+                    continue
+                y_pred = model.predict(self.X_test[self.labels_test == label])
+                correct_identifications = np.sum(y_pred == 1)
+                total_attacks = len(y_pred)
+                rate = (correct_identifications / total_attacks) * 100 if total_attacks > 0 else 0
+                rates.append({'Label': label, 'Identification Rate (%)': rate})
+            rate_df = pd.DataFrame(rates)
+            rate_df.to_csv(f'results/attack_identification_rates_{name}.csv', index=False)
+        return rate_df
+
     def print_top_k_high_confidence_errors(self, k: int = 100) -> None:
         for name, model in self.models.items():
             if hasattr(model, 'predict_proba'):
@@ -60,12 +76,12 @@ class BinaryClassificationEvaluator:
                 fn_df['Original Label'] = self.labels_test.iloc[fn_error_indices].values
                 fn_df['Probability'] = probas[fn_error_indices, 0]
 
-                print(f'Top {k} high confidence false positives for {name}:')
-                print(fp_df)
+                # print(f'Top {k} high confidence false positives for {name}:')
+                # print(fp_df)
                 fp_df.to_csv(f'results/top_{k}_fp_{name}.csv', index=False)
 
-                print(f'Top {k} high confidence false negatives for {name}:')
-                print(fn_df)
+                # print(f'Top {k} high confidence false negatives for {name}:')
+                # print(fn_df)
                 fn_df.to_csv(f'results/top_{k}_fn_{name}.csv', index=False)
             else:
                 print(f'{name} does not support predict_proba()')

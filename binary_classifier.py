@@ -14,7 +14,7 @@ class BinaryClassifier:
         self.verbose = verbose
         self.model_dir = model_dir
 
-    def train_models(self, retrain: bool = False) -> Dict[str, Any]:
+    def load_or_train_models(self, retrain: bool = False) -> Dict[str, Any]:
         models = {
             'GDA': QuadraticDiscriminantAnalysis(),
             'Regularized GDA': QuadraticDiscriminantAnalysis(reg_param=0.7),

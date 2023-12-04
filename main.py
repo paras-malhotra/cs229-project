@@ -1,4 +1,6 @@
 from data_loader import DataLoader
+from multi_class_classification_evaluator import MultiClassClassificationEvaluator
+from multi_class_classifier import MultiClassClassifier
 from prelim_analyser import PrelimAnalyser
 from feature_selector import FeatureSelector
 from binary_classifier import BinaryClassifier
@@ -11,7 +13,7 @@ def main(verbose=True) -> None:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(current_dir, 'data')
     loader = DataLoader(directory=data_dir, verbose=verbose)
-    loader.load_and_clean_data(fresh=True)
+    loader.load_and_clean_data(fresh=False)
     X_train, X_val, X_test, y_train, y_val, y_test, labels_train, labels_val, labels_test = loader.split_data(original_label_column='label', features=None, test_size=0.1, val_size=0.1)
     
     if verbose:
@@ -43,13 +45,21 @@ def main(verbose=True) -> None:
 
     # Binary classification
     classifier = BinaryClassifier(X_train=X_train, y_train=y_train, verbose=verbose)
-    models = classifier.train_models(retrain=True)
+    models = classifier.load_or_train_models(retrain=False)
 
-    # Evaluation
+    # Binary classification evaluation
     evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, labels_test=labels_test, scaler=loader.scaler, verbose=verbose)
     evaluator.evaluate_models()
     evaluator.calculate_attack_identification_rate_by_label()
     evaluator.print_top_k_high_confidence_errors(k=100)
+
+    # Multi-class classification
+    multi_class_classifier = MultiClassClassifier(X_train=X_train, y_train=labels_train, verbose=verbose)
+    multi_class_models = multi_class_classifier.load_or_train_models(retrain=False)
+
+    # Multi-class classification evaluation
+    multi_class_evaluator = MultiClassClassificationEvaluator(models=multi_class_models, X_test=X_test, y_test=labels_test, scaler=loader.scaler, verbose=verbose)
+    multi_class_evaluator.evaluate_models()
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,5 @@
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, classification_report
-from sklearn.base import ClassifierMixin
 from typing import Protocol, Dict, Any
 import pandas as pd
 import seaborn as sns

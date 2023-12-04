@@ -25,7 +25,7 @@ class BinaryClassificationEvaluator:
         for name, model in self.models.items():
             model_name = name.replace(" ", "_").lower()
             y_pred = model.predict(self.X_test)
-            report_str = classification_report(self.y_test, y_pred)
+            report_str = classification_report(self.y_test, y_pred, digits=4)
             if self.verbose:
                 print(f"Classification Report for {name}:")
                 print(report_str)

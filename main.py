@@ -11,8 +11,8 @@ def main(verbose=True) -> None:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(current_dir, 'data')
     loader = DataLoader(directory=data_dir, verbose=verbose)
-    loader.load_and_clean_data(fresh=False)
-    X_train, X_val, X_test, y_train, y_val, y_test, labels_train, labels_val, labels_test = loader.split_data(original_label_column='label', features=None, test_size=0.3, val_size=0.0)
+    loader.load_and_clean_data(fresh=True)
+    X_train, X_val, X_test, y_train, y_val, y_test, labels_train, labels_val, labels_test = loader.split_data(original_label_column='label', features=None, test_size=0.1, val_size=0.1)
     
     if verbose:
         pd.set_option('display.max_rows', None)
@@ -43,7 +43,7 @@ def main(verbose=True) -> None:
 
     # Binary classification
     classifier = BinaryClassifier(X_train=X_train, y_train=y_train, verbose=verbose)
-    models = classifier.train_models(retrain=False)
+    models = classifier.train_models(retrain=True)
 
     # Evaluation
     evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, labels_test=labels_test, scaler=loader.scaler, verbose=verbose)

@@ -64,7 +64,7 @@ class DataLoader:
     def add_binary_label(self, label_column: str, negative_class: str) -> None:
         self.data['binary_label'] = self.data[label_column].apply(lambda x: 0 if x == negative_class else 1)
 
-    def split_data(self, original_label_column: str, features: List[str] = None, test_size: float = 0.3, val_size: float = 0.0) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, pd.Series]:
+    def split_data(self, original_label_column: str, features: List[str] = None, test_size: float = 0.3, val_size: float = 0.0) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, pd.Series, pd.Series, pd.Series, pd.Series]:
         # If features is None, use all columns except original_label_column and 'binary_label'
         if features is None:
             features = [col for col in self.data.columns if col not in [original_label_column, 'binary_label']]

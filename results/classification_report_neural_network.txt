@@ -1,0 +1,9 @@
+Classification Report for Neural Network:
+              precision    recall  f1-score   support
+
+           0     0.9975    0.9962    0.9969    227311
+           1     0.9847    0.9897    0.9872     55477
+
+    accuracy                         0.9950    282788
+   macro avg     0.9911    0.9930    0.9920    282788
+weighted avg     0.9950    0.9950    0.9950    282788

@@ -55,7 +55,7 @@ def main(verbose=True) -> None:
 
     # Multi-class classification
     multi_class_classifier = MultiClassClassifier(X_train=X_train, y_train=labels_train, verbose=verbose)
-    multi_class_models = multi_class_classifier.load_or_train_models(retrain=False)
+    multi_class_models = multi_class_classifier.load_or_train_models(retrain=True)
 
     # Multi-class classification evaluation
     multi_class_evaluator = MultiClassClassificationEvaluator(models=multi_class_models, X_test=X_test, y_test=labels_test, scaler=loader.scaler, verbose=verbose)

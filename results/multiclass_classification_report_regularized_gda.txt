@@ -1,22 +1,22 @@
 Classification Report for Regularized GDA:
                             precision    recall  f1-score   support
 
-                    BENIGN     0.9998    0.5441    0.7047    227311
-                       Bot     0.0056    0.2952    0.0109       210
-                      DDoS     0.4202    0.9779    0.5878     12633
-             DoS GoldenEye     0.2699    0.8832    0.4134      1010
-                  DoS Hulk     0.6595    0.8330    0.7361     22982
-          DoS Slowhttptest     0.2797    0.7989    0.4143       557
-             DoS slowloris     0.0692    0.5027    0.1217       555
-               FTP-Patator     0.0353    0.4636    0.0655       742
-                Heartbleed     0.0009    1.0000    0.0018         1
+                    BENIGN     0.9624    0.9638    0.9631    227311
+                       Bot     0.0337    0.9810    0.0652       210
+                      DDoS     0.9502    0.9537    0.9520     12633
+             DoS GoldenEye     0.4260    0.9980    0.5972      1010
+                  DoS Hulk     0.9991    0.6219    0.7666     22982
+          DoS Slowhttptest     0.3329    0.9677    0.4954       557
+             DoS slowloris     0.9735    0.9910    0.9821       555
+               FTP-Patator     1.0000    0.9987    0.9993       742
+                Heartbleed     0.0000    0.0000    0.0000         1
               Infiltration     0.0000    0.0000    0.0000         2
-                  PortScan     0.3348    0.9869    0.5000     15962
-               SSH-Patator     0.0258    0.4975    0.0491       611
-  Web Attack � Brute Force     0.0269    0.8684    0.0522       152
+                  PortScan     0.9939    0.9930    0.9934     15962
+               SSH-Patator     1.0000    0.9885    0.9942       611
+  Web Attack � Brute Force     1.0000    0.1645    0.2825       152
 Web Attack � Sql Injection     0.0000    0.0000    0.0000         3
-          Web Attack � XSS     0.0000    0.0000    0.0000        57
+          Web Attack � XSS     0.3056    0.9649    0.4641        57
 
-                  accuracy                         0.6132    282788
-                 macro avg     0.2085    0.5768    0.2439    282788
-              weighted avg     0.8968    0.6132    0.6836    282788
+                  accuracy                         0.9371    282788
+                 macro avg     0.5985    0.7058    0.5703    282788
+              weighted avg     0.9628    0.9371    0.9451    282788

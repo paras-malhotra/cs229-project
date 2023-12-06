@@ -17,10 +17,10 @@ class MultiClassClassifier:
 
     def load_or_train_models(self, retrain: bool = False) -> Dict[str, Any]:
         models = {
-            'GDA': QuadraticDiscriminantAnalysis(),
-            'Regularized GDA': QuadraticDiscriminantAnalysis(reg_param=0.7),
-            'Logistic Regression': LogisticRegression(random_state=42, solver='lbfgs', multi_class='multinomial', max_iter=1000, verbose=1 if self.verbose else 0),
-            'Decision Tree': DecisionTreeClassifier(random_state=42, criterion='gini', splitter='best', max_depth=None, max_features=None),
+            # 'GDA': QuadraticDiscriminantAnalysis(),
+            'Regularized GDA': QuadraticDiscriminantAnalysis(reg_param=0),
+            'Logistic Regression': LogisticRegression(random_state=42, solver='lbfgs', multi_class='multinomial', C=100, max_iter=1000, verbose=1 if self.verbose else 0),
+            # 'Decision Tree': DecisionTreeClassifier(random_state=42, criterion='gini', splitter='best', max_depth=None, max_features=None),
             # 'Random Forest': RandomForestClassifier(random_state=42, criterion='gini', max_depth=None, max_features='sqrt', n_jobs=-1, verbose=3 if self.verbose else 0),
             # 'SVM': SVC(random_state=42, kernel='rbf', decision_function_shape='ovr', verbose=3 if self.verbose else 0)
         }

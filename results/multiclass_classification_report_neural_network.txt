@@ -1,0 +1,22 @@
+Classification Report for Neural Network:
+                            precision    recall  f1-score   support
+
+                    BENIGN     0.9961    0.9977    0.9969    227311
+                       Bot     1.0000    0.3571    0.5263       210
+                      DDoS     0.9985    0.9996    0.9991     12633
+             DoS GoldenEye     0.9863    0.9960    0.9911      1010
+                  DoS Hulk     0.9859    0.9806    0.9832     22982
+          DoS Slowhttptest     0.9197    0.9874    0.9524       557
+             DoS slowloris     0.9962    0.9550    0.9752       555
+               FTP-Patator     0.9880    0.9973    0.9926       742
+                Heartbleed     0.0000    0.0000    0.0000         1
+              Infiltration     0.0000    0.0000    0.0000         2
+                  PortScan     0.9933    0.9976    0.9954     15962
+               SSH-Patator     0.9695    0.9362    0.9525       611
+  Web Attack � Brute Force     1.0000    0.0789    0.1463       152
+Web Attack � Sql Injection     0.0000    0.0000    0.0000         3
+          Web Attack � XSS     0.5000    0.0175    0.0339        57
+
+                  accuracy                         0.9950    282788
+                 macro avg     0.7556    0.6201    0.6363    282788
+              weighted avg     0.9949    0.9950    0.9946    282788

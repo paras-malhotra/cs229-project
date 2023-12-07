@@ -1,8 +1,10 @@
+import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV, ParameterGrid
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 import os
+from sklearn.utils import compute_class_weight
 from data_loader import DataLoader
 from sklearn.metrics import accuracy_score
 
@@ -24,15 +26,19 @@ class HyperparameterTuner:
 
         return best_params, best_score
 
-    def tune_hyperparameters_holdout(self, model: BaseEstimator, param_grid: dict, multi_class: bool = False):
+    def tune_hyperparameters_holdout(self, model: BaseEstimator, param_grid: dict, multi_class: bool = False, weight_classes: bool = False):
         best_params = None
         best_score = 0
         y_val = self.labels_val if multi_class else self.y_val
         y_train = self.labels_train if multi_class else self.y_train
+        class_weights = self.get_custom_class_weights()
 
         for params in ParameterGrid(param_grid):
             model.set_params(**params)
-            model.fit(self.X_train, y_train)
+            if weight_classes:
+                model.fit(self.X_train, y_train, sample_weight=[class_weights[label] for label in y_train])
+            else:
+                model.fit(self.X_train, y_train)
             preds = model.predict(self.X_val)
             score = accuracy_score(y_val, preds)
 
@@ -71,7 +77,17 @@ class HyperparameterTuner:
         param_grid = {'C': [0.01, 0.1, 1, 10, 100]}
         lr = LogisticRegression(solver='lbfgs', multi_class='multinomial', max_iter=1000, verbose=1)
 
-        return self.tune_hyperparameters_holdout(model=lr, param_grid=param_grid, multi_class=True)
+        return self.tune_hyperparameters_holdout(model=lr, param_grid=param_grid, multi_class=True, weight_classes=False)
+
+    def get_custom_class_weights(self, max_weight=10):
+        unique_classes = np.unique(self.labels_train)
+        class_weights = compute_class_weight(class_weight='balanced', classes=unique_classes, y=self.labels_train)
+
+        # Cap the weights to a maximum value
+        class_weights = np.minimum(class_weights, max_weight)
+
+        # Return a dictionary with class labels as keys
+        return dict(zip(unique_classes, class_weights))
 
 def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))

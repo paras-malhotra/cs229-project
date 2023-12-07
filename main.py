@@ -45,7 +45,7 @@ def main(verbose=True) -> None:
 
     # Binary classification
     classifier = BinaryClassifier(X_train=X_train, y_train=y_train, verbose=verbose)
-    models = classifier.load_or_train_models(retrain=False)
+    models = classifier.load_or_train_models(retrain=True)
 
     # Binary classification evaluation
     evaluator = BinaryClassificationEvaluator(models=models, X_test=X_test, y_test=y_test, labels_test=labels_test, scaler=loader.scaler, verbose=verbose)

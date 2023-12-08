@@ -1,0 +1,22 @@
+Training Classification Report for GDA:
+                            precision    recall  f1-score   support
+
+                    BENIGN     0.9993    0.9527    0.9754   1817055
+                       Bot     0.0292    1.0000    0.0568      1565
+                      DDoS     0.8843    0.9979    0.9377    102420
+             DoS GoldenEye     0.6723    0.9990    0.8037      8234
+                  DoS Hulk     0.9607    0.9963    0.9782    184099
+          DoS Slowhttptest     0.3645    0.9650    0.5291      4399
+             DoS slowloris     0.7633    0.9877    0.8611      4637
+               FTP-Patator     0.9998    0.9975    0.9987      6348
+                Heartbleed     1.0000    1.0000    1.0000         9
+              Infiltration     1.0000    0.5517    0.7111        29
+                  PortScan     0.9939    0.9963    0.9951    127043
+               SSH-Patator     1.0000    0.9943    0.9971      4717
+  Web Attack � Brute Force     0.7801    0.4735    0.5893      1206
+Web Attack � Sql Injection     0.0000    0.0000    0.0000        17
+          Web Attack � XSS     0.3652    0.7107    0.4824       522
+
+                  accuracy                         0.9609   2262300
+                 macro avg     0.7208    0.8415    0.7277   2262300
+              weighted avg     0.9868    0.9609    0.9725   2262300

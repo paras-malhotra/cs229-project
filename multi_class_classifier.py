@@ -9,8 +9,8 @@ import pandas as pd
 import os
 import joblib
 from typing import Dict, Any
-
 from sklearn.utils import compute_class_weight
+from sklearn.metrics import classification_report
 
 class MultiClassClassifier:
     def __init__(self, X_train: pd.DataFrame, y_train: pd.Series, model_dir: str = 'saved_models', verbose: bool = True) -> None:
@@ -44,9 +44,22 @@ class MultiClassClassifier:
                 if self.verbose:
                     print(f'Trained and saved multi-class {name} model.')
             else:
-                models[name] = joblib.load(file_path)
+                model = joblib.load(file_path)
+                models[name] = model
                 if self.verbose:
                     print(f'Loaded multi-class {name} model from file.')
+
+            if self.verbose:
+                y_train_pred = model.predict(self.X_train)
+                train_report = classification_report(self.y_train, y_train_pred, digits=4, zero_division=0)
+                print(f"Training Classification Report for {name}:")
+                print(train_report)
+
+                # Save the training report to a file
+                train_report_file_path = os.path.join('results', f'training_classification_report_{name.replace(" ", "_").lower()}.txt')
+                with open(train_report_file_path, 'w') as file:
+                    file.write(f"Training Classification Report for {name}:\n")
+                    file.write(train_report)
         return models
 
     def get_custom_class_weights(self, max_weight=10):
